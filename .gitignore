@@ -2,6 +2,7 @@
 .env
 *.env
 !.env.example
+.env.backup
 
 # Python
 .venv/
@@ -22,6 +23,7 @@ data/output/
 data/processed/
 data/exports/
 data/input/*.csv
+!data/input/example_*.csv
 data/**/*.sqlite
 data/**/*.db
 data/**/*.bak
@@ -29,10 +31,14 @@ data/**/*.bak
 # CV and personal assets
 assets/*.pdf
 assets/*.docx
+assets/*.doc
 
 # Generated outreach reports (also under data/output/)
 send_report*.csv
 outreach_drafts*.csv
+*.csv
+!examples/*.csv
+!data/input/example_*.csv
 
 # Logs and misc
 *.log

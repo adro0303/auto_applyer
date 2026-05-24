@@ -1,132 +1,106 @@
 # Auto Applyer
 
-A **safety-first** job outreach assistant for graduate and junior technical roles. Import Apollo leads, score contacts, generate personalised email drafts, approve manually, and send only what you explicitly approve — with SQLite tracking and CV attachment support.
+🌍 Language: English | [Español](README.es.md)
 
-**This is not a spam bot.** Nothing is sent without manual approval.
+## Overview
 
----
+Auto Applyer is a local Python tool for safe job outreach automation. It helps import leads, generate email drafts, review and approve drafts manually, run dry-run checks, send approved emails through SMTP, view reports, and manage safety controls through both CLI and a local Streamlit dashboard.
+
+Designed for careful, human-reviewed, low-volume outreach for junior/graduate roles — not spam.
 
 ## Features
 
-- Apollo CSV import with email classification (usable / risky / needs email)
-- Lead scoring and recruiter vs agency contact typing
-- Variable-based email templates (first name, cleaned company name, no keyword dumps)
-- Import batch tracking to separate real leads from test data
-- Draft export to CSV for manual review (`approved=yes`)
-- Dry-run send preview (read-only, no DB changes)
-- Live SMTP send with daily limits, delays, and 4xx uncertain handling
-- Test data cleanup command
-- Optional Streamlit dashboard (read-only)
-- Unit tests for SMTP status handling
-
----
+- Apollo CSV import
+- Lead cleaning, scoring, and contact type detection
+- Template-based email generation
+- Manual approval workflow before any send
+- SMTP sending with Gmail App Password
+- Dry-run and live-send reports
+- Uncertain SMTP status handling + `mark-sent` helper
+- Local Streamlit dashboard with English/Spanish UI
 
 ## Safety-first workflow
 
-1. Import leads locally — **never commit** real Apollo CSVs or contacts.
-2. Generate drafts → review `data/output/outreach_drafts_*.csv`.
-3. Set `approved=yes` only for rows you have read.
-4. Run `approve-drafts --csv …` then `send-approved --dry-run`.
-5. Live send only when `AUTO_SEND_ENABLED=true` and you confirm at the prompt.
-6. If SMTP returns a temporary 4xx, status becomes `send_unknown` — check Gmail Sent before retrying; use `mark-sent --message-id N` after verification.
+1. Import leads locally.
+2. Generate drafts and review them manually.
+3. Approve only reviewed drafts.
+4. Run dry-run before any live send.
+5. Enable live sending only when ready (`AUTO_SEND_ENABLED=true`).
+6. In Streamlit, live sending still requires typing `SEND LIVE`.
 
-Keep `DRY_RUN=true` and `AUTO_SEND_ENABLED=false` until you trust the workflow.
-
----
-
-## What NOT to commit
-
-| Never commit | Why |
-|--------------|-----|
-| `.env` | SMTP passwords, API keys |
-| `data/db/` | SQLite with real contacts and messages |
-| `data/leads/` | Real Apollo exports |
-| `data/output/`, `data/processed/` | Drafts and send reports |
-| `assets/*.pdf` | Your CV |
-| Real outreach CSVs | Personal contact data |
-
-Use `.env.example` as a template only. All sensitive paths are in `.gitignore`.
-
----
-
-## Setup
+## Installation
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate          # Windows
+.venv\Scripts\activate
 pip install -r requirements.txt
 python -m src.cli init-env
 ```
 
-Then:
+Copy `.env.example` to `.env` and fill local values only.
 
-1. Copy `.env.example` → `.env` and fill in **local** values.
-2. Place your CV at the path set in `CV_PATH` (e.g. `assets/your_cv.pdf`).
-3. Create Gmail App Password (2FA required) for `SMTP_APP_PASSWORD`.
-4. Keep `AUTO_SEND_ENABLED=false` until ready.
+## Environment variables
 
----
+Use `.env.example` placeholders. Important variables:
+
+- SMTP: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_APP_PASSWORD`
+- Sender: `SENDER_EMAIL`, `SENDER_NAME`
+- CV: `CV_PATH`
+- Safety: `DRY_RUN`, `AUTO_SEND_ENABLED`
+- Limits: `DAILY_SEND_LIMIT`, `SEND_DELAY_MIN_SECONDS`, `SEND_DELAY_MAX_SECONDS`
+- Optional APIs: `OPENAI_API_KEY`, `HUNTER_API_KEY`
+
+Never commit `.env`, credentials, API keys, real contacts, CV files, reports, or local databases.
 
 ## CLI usage
 
 ```bash
-python -m src.cli --help
+python -m src.cli generate-drafts --country uk --source apollo --source-file data/leads/apollo-contacts-export.csv --min-score 50 --no-enrich --force
 
-# Import (use your local Apollo file — not committed)
-python -m src.cli import-apollo --file data/leads/your_export.csv --country uk
-
-# Generate drafts from a specific import
-python -m src.cli generate-drafts --country uk --source apollo \
-  --source-file data/leads/your_export.csv --min-score 50 --no-enrich
-
-# Approve and send
 python -m src.cli approve-drafts --csv data/output/outreach_drafts_uk.csv
-python -m src.cli send-approved --country uk --dry-run
-python -m src.cli send-approved --country uk --live   # only when ready
 
-# After verifying delivery in Gmail Sent (4xx uncertain)
-python -m src.cli mark-sent --message-id 123
+python -m src.cli send-approved --country uk --dry-run --limit 5
 
-# Remove test/example data from DB
-python -m src.cli cleanup-test-data --dry-run
+python -m src.cli send-approved --country uk --live --limit 1
+
+python -m src.cli mark-sent --message-id 151
 ```
 
-### Test with anonymised sample
+## Visual dashboard / Streamlit UI
 
 ```bash
-mkdir -p data/leads
-copy examples\example_apollo_export.csv data\leads\example_apollo_export.csv
-python -m src.cli import-apollo --file data/leads/example_apollo_export.csv --country uk
+python -m streamlit run src/ui_app.py
 ```
 
----
-
-## Streamlit dashboard (optional)
-
-Read-only view of contacts and messages:
+or
 
 ```bash
-streamlit run dashboard/app.py
+run_app.bat
 ```
 
----
+The dashboard is local-first, includes safety controls, and requires both `AUTO_SEND_ENABLED=true` and `SEND LIVE` for live send.
 
-## Project layout
+## Project structure
 
-```
+```text
 auto_applyer/
-├── src/              # CLI, import, scoring, email generation, sending
-├── tests/            # Unit tests
-├── templates/        # Legacy Jinja templates
-├── dashboard/        # Streamlit app
-├── examples/         # Anonymised sample Apollo CSV (safe to commit)
-├── prompts/          # Cursor / agent prompts
-├── data/             # Local only (gitignored): db, leads, output, processed
-└── assets/           # Local CV (gitignored); .gitkeep tracks folder
+├── src/
+├── tests/
+├── prompts/
+├── examples/
+├── data/        # local-only (gitignored)
+├── assets/      # local CV files (gitignored)
+├── README.md
+└── README.es.md
 ```
 
----
+## Security notes
 
-## License
+- Do not commit `.env` or `.env.backup`
+- Do not commit SQLite files, real CSVs, reports, or CVs
+- Do not expose SMTP credentials or API keys
+- Keep sending volume low and reviewed by a human
 
-Private / personal tooling. Use responsibly and comply with email and data protection laws.
+## Disclaimer
+
+This project is intended for careful, ethical job-search outreach. You are responsible for legal compliance, consent, and platform/email policy adherence.
