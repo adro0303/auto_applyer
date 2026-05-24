@@ -1,0 +1,17 @@
+Hola {{ name }},
+
+He visto {{ company }} y quería escribirte brevemente.
+
+{{ role_intro }}
+
+{{ role_focus }}
+
+Me ha llamado la atención vuestro trabajo en {{ personalised_detail }}.
+
+Te dejo mi CV adjunto y mi GitHub/LinkedIn por si mi perfil pudiera encajar en alguna oportunidad junior, graduate o early-career en software / IA ahora o más adelante.
+
+GitHub: {{ github }}
+LinkedIn: {{ linkedin }}
+
+Muchas gracias,
+{{ sender_name }}

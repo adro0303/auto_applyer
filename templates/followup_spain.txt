@@ -1,0 +1,8 @@
+Hola {{ name }},
+
+Solo quería hacer un pequeño seguimiento por si mi mensaje anterior podía ser relevante.
+
+Estaré encantado de compartir más detalles sobre mis proyectos de backend / IA o mi CV si puede encajar.
+
+Muchas gracias,
+{{ sender_name }}

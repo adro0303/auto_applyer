@@ -1,0 +1,17 @@
+Hi {{ name }},
+
+I came across {{ company }} and wanted to reach out briefly.
+
+{{ role_intro }}
+
+{{ role_focus }}
+
+I liked the type of work your team is doing around {{ personalised_detail }}.
+
+I've attached my CV and included my GitHub/LinkedIn below in case it is relevant for any junior, graduate or early-career software / AI opportunities now or in the near future.
+
+GitHub: {{ github }}
+LinkedIn: {{ linkedin }}
+
+Thanks for your time,
+{{ sender_name }}
