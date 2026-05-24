@@ -4,19 +4,61 @@
 
 ## Resumen
 
-Auto Applyer es una herramienta local en Python para automatización segura de outreach laboral. Permite importar leads, generar borradores de email, revisarlos y aprobarlos manualmente, ejecutar simulaciones (dry-run), enviar correos aprobados por SMTP, ver reportes y gestionar controles de seguridad desde CLI y desde un dashboard local de Streamlit.
+Auto Applyer es una herramienta local en Python para automatización segura de outreach laboral. Permite importar leads, generar borradores de email, revisarlos y aprobarlos manualmente, ejecutar simulaciones, enviar correos aprobados por SMTP, ver reportes y gestionar controles de seguridad desde CLI y desde un dashboard local de Streamlit.
 
 Está diseñado para outreach cuidadoso, revisado por humanos y de bajo volumen para roles junior/graduate — no para spam.
+
+## Cómo usar
+
+### Opción recomendada: dashboard visual
+
+La forma más cómoda de usar la herramienta es abrir el dashboard local:
+
+```bash
+run_app.bat
+```
+
+O también:
+
+```bash
+python -m streamlit run src/ui_app.py
+```
+
+Desde el dashboard puedes:
+
+1. Revisar configuración y estado de seguridad.
+2. Generar borradores desde el CSV de Apollo.
+3. Revisar emails generados.
+4. Aprobar solo los borradores que quieras enviar.
+5. Ejecutar una simulación antes de enviar.
+6. Activar o desactivar el envío real desde ajustes.
+7. Enviar correos aprobados con confirmación manual.
+8. Consultar reportes de envío.
+
+El envío real está protegido: requiere `AUTO_SEND_ENABLED=true` y escribir exactamente `SEND LIVE`.
+
+### Flujo recomendado
+
+1. Coloca el CSV de Apollo en `data/leads/`.
+2. Genera los borradores desde el dashboard o CLI.
+3. Revisa los emails manualmente.
+4. Marca como aprobados solo los contactos buenos.
+5. Ejecuta un dry-run.
+6. Si todo está correcto, activa el envío real.
+7. Envía pocos correos por tanda.
+8. Vuelve a desactivar el envío real al terminar.
 
 ## Funcionalidades
 
 - Importación de CSV de Apollo
-- Limpieza y scoring de leads, detección de tipo de contacto
+- Limpieza y scoring de leads
+- Detección de tipo de contacto
 - Generación de emails basada en plantillas
 - Flujo de aprobación manual antes de enviar
 - Envío SMTP con Gmail App Password
 - Reportes de dry-run y envío real
-- Manejo de estado SMTP incierto + helper `mark-sent`
+- Manejo de estado SMTP incierto
+- Helper `mark-sent`
 - Dashboard local Streamlit con UI en inglés/español
 
 ## Flujo safety-first
@@ -25,7 +67,7 @@ Está diseñado para outreach cuidadoso, revisado por humanos y de bajo volumen 
 2. Generar borradores y revisarlos manualmente.
 3. Aprobar solo los borradores revisados.
 4. Ejecutar dry-run antes de cualquier envío real.
-5. Activar envío real solo cuando estés listo (`AUTO_SEND_ENABLED=true`).
+5. Activar envío real solo cuando estés listo.
 6. En Streamlit, el envío real además requiere escribir `SEND LIVE`.
 
 ## Instalación
@@ -41,7 +83,7 @@ Copia `.env.example` a `.env` y completa solo valores locales.
 
 ## Variables de entorno
 
-Usa placeholders en `.env.example`. Variables importantes:
+Variables principales:
 
 - SMTP: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_APP_PASSWORD`
 - Remitente: `SENDER_EMAIL`, `SENDER_NAME`
@@ -72,13 +114,28 @@ python -m src.cli mark-sent --message-id 151
 python -m streamlit run src/ui_app.py
 ```
 
-o
+o:
 
 ```bash
 run_app.bat
 ```
 
-El dashboard es local-first, incluye controles de seguridad y requiere tanto `AUTO_SEND_ENABLED=true` como `SEND LIVE` para envío real.
+El dashboard funciona de forma local y permite gestionar el flujo completo sin escribir comandos constantemente.
+
+## Acceso directo con icono personalizado
+
+Si quieres abrir la app desde el escritorio con un icono personalizado:
+
+1. Haz clic derecho sobre `run_app.bat`.
+2. Selecciona **Crear acceso directo**.
+3. Mueve el acceso directo al escritorio.
+4. Haz clic derecho sobre el acceso directo.
+5. Entra en **Propiedades**.
+6. Pulsa **Cambiar icono**.
+7. Selecciona el archivo `.ico` que está en la carpeta principal del proyecto.
+8. Guarda los cambios.
+
+Importante: el archivo `.bat` no puede tener icono propio directamente. El icono se aplica al acceso directo.
 
 ## Estructura del proyecto
 
@@ -100,7 +157,8 @@ auto_applyer/
 - No subas archivos SQLite, CSV reales, reportes ni CVs
 - No expongas credenciales SMTP ni API keys
 - Mantén envíos de bajo volumen y con revisión humana
+- Usa siempre dry-run antes de envío real
 
 ## Descargo de responsabilidad
 
-Este proyecto está pensado para outreach laboral ético y cuidadoso. Tú eres responsable del cumplimiento legal, consentimiento y políticas de plataformas/email.
+Este proyecto está pensado para outreach laboral personal, cuidadoso y revisado manualmente. No debe utilizarse para spam, scraping abusivo ni envíos masivos no solicitados.
