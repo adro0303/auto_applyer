@@ -56,12 +56,12 @@ TEXT: dict[str, dict[str, str]] = {
     "en": {
         "app_title": "Auto Applyer",
         "app_subtitle": "Local outreach control dashboard",
-        "nav_dashboard": "Dashboard",
-        "nav_drafts": "Drafts",
-        "nav_generate": "Generate",
-        "nav_approve": "Approve",
-        "nav_dry_run": "Dry Run",
-        "nav_live_send": "Live Send",
+        "nav_dashboard": "Home",
+        "nav_drafts": "Review drafts",
+        "nav_generate": "Prepare emails",
+        "nav_approve": "Approve emails",
+        "nav_dry_run": "Simulate sending",
+        "nav_live_send": "Send emails",
         "nav_reports": "Reports",
         "nav_manual": "Manual Actions",
         "nav_settings": "Settings",
@@ -71,8 +71,8 @@ TEXT: dict[str, dict[str, str]] = {
         "campaign_country": "Campaign country",
         "sender_email_label": "Sender email",
         "secrets_never": "Secrets are never shown in this UI.",
-        "live_enabled": "LIVE SENDING IS ENABLED",
-        "live_disabled_safe": "Live sending is disabled. Safe mode.",
+        "live_enabled": "WARNING: live sending is enabled.",
+        "live_disabled_safe": "Safe mode enabled: real emails cannot be sent.",
         "live_enabled_smtp": "LIVE SENDING IS ENABLED — emails will be sent via SMTP.",
         "live_on": "LIVE ON",
         "live_off": "LIVE OFF",
@@ -96,10 +96,10 @@ TEXT: dict[str, dict[str, str]] = {
         "not_found": "Not found",
         "rows": "rows",
         "quick_actions": "Quick actions",
-        "action_review": "Review Drafts",
-        "action_generate": "Generate Drafts",
-        "action_dry_run": "Run Dry Run",
-        "action_live": "Live Send",
+        "action_review": "Review drafts",
+        "action_generate": "Prepare emails",
+        "action_dry_run": "Simulate sending",
+        "action_live": "Send emails",
         "action_reports": "Reports",
         "draft_review": "Draft Review",
         "no_drafts": "No drafts found at `{path}`. Run **Generate Drafts** first.",
@@ -115,17 +115,30 @@ TEXT: dict[str, dict[str, str]] = {
         "email_body": "Email body",
         "notes": "Notes",
         "score_notes": "Score notes",
-        "approve_selected": "Approve selected",
+        "approve_selected": "Approve selected emails",
         "unapprove_selected": "Unapprove selected",
-        "save_csv": "Save CSV changes",
+        "save_csv": "Save changes",
         "marked_yes": "Marked {n} row(s) as approved=yes (not saved yet).",
         "marked_no": "Marked {n} row(s) as approved=no (not saved yet).",
         "saved_csv": "Saved to `{name}` with UTF-8 BOM.",
-        "generate_drafts": "Generate Drafts",
+        "generate_drafts": "Prepare emails",
         "country": "Country",
         "source_file": "Source file",
+        "step_1_select_csv": "Step 1 - Select CSV",
+        "step_2_import": "Step 2 - Import contacts",
+        "step_3_generate": "Step 3 - Generate drafts",
+        "btn_import_csv": "Import CSV",
+        "importing": "Importing Apollo contacts...",
+        "import_done": "Import finished.",
+        "import_contacts_result": "Imported/updated contacts: {n}",
+        "generate_failed": "Generate command failed (exit code {code}).",
+        "import_failed": "Import command failed (exit code {code}).",
+        "generate_no_drafts_warning": "No drafts were generated. You may need to import the CSV first or lower min_score.",
+        "generate_no_drafts_actions": "Suggested actions:\n- Import CSV first\n- Check Company Country / country is Spain\n- Lower min_score\n- Review email classification\n- Verify valid emails exist",
+        "drafts_generated_count": "Generated {n} draft(s).",
+        "drafts_export_path": "Draft file: `{path}`",
         "force_regen": "Force regenerate (--force)",
-        "btn_generate": "Generate Drafts",
+        "btn_generate": "Prepare emails",
         "generating": "Generating drafts...",
         "drafts_generated": "Drafts generated.",
         "approve_db_title": "Approve Drafts to Database",
@@ -134,20 +147,20 @@ TEXT: dict[str, dict[str, str]] = {
         "running_approve": "Running approve-drafts...",
         "dry_run_title": "Dry Run",
         "limit": "Limit",
-        "btn_dry_run": "Run dry-run",
+        "btn_dry_run": "Simulate sending",
         "running_dry_run": "Running dry-run (read-only)...",
         "latest_dry_report": "Latest dry-run report",
         "cv_found_count": "CV found: {ok}/{total}",
         "live_send_title": "Live Send",
         "confirm_send_live": 'Type exactly "SEND LIVE" to unlock send button',
-        "btn_send_live": "Send live emails",
+        "btn_send_live": "Send approved emails",
         "sending": "Sending live emails...",
         "go_settings_enable": "Go to Settings to enable live sending",
         "reports_title": "Reports",
         "no_live_report": "No live send report yet.",
         "no_dry_report": "No dry-run report yet.",
-        "report_live_title": "send_report.csv (live)",
-        "report_dry_title": "send_report_dry_run.csv",
+        "report_live_title": "Live send report",
+        "report_dry_title": "Dry-run report",
         "manual_title": "Manual Actions",
         "mark_sent_help": "Mark message as sent after checking Gmail Sent (for uncertain 4xx).",
         "message_id": "message_id",
@@ -174,22 +187,38 @@ TEXT: dict[str, dict[str, str]] = {
         "auto_send_help_on": "ON - live sending enabled.",
         "enable_live_warning": "Turning on live sending is dangerous.",
         "enable_live_placeholder": "Type ENABLE LIVE",
-        "btn_save_settings": "Save settings",
+        "btn_save_settings": "Save changes",
         "settings_saved": "Settings saved. Backup: `.env.backup`",
         "settings_save_failed": "Could not save settings: {reason}",
         "safe_mode_on": "Safe mode enabled. AUTO_SEND_ENABLED=false.",
         "env_missing": "No `.env` file found. Run `python -m src.cli init-env` first.",
         "invalid_enable_phrase": 'Type exactly "ENABLE LIVE" to enable live sending.',
+        "page_intro_inicio": "From here you can prepare emails, review them, approve them, simulate sending, and send in a controlled way.",
+        "page_intro_generate": "Import an Apollo CSV and generate personalized drafts without sending anything.",
+        "page_intro_drafts": "Read generated emails and mark as approved only those you want to send.",
+        "page_intro_approve": "Save into the database the emails marked as approved in the CSV.",
+        "page_intro_dry_run": "Check which emails would be sent and whether the CV is attached, without sending real emails.",
+        "page_intro_live_send": "Send only approved emails. This action stays blocked unless live sending is enabled and manually confirmed.",
+        "page_intro_reports": "Review dry-run and live-send results.",
+        "page_intro_manual": "Use manual recovery actions for special cases.",
+        "page_intro_settings": "Configure sender, CV, limits, delays, and safe mode.",
+        "result_sent": "sent",
+        "result_dry_run": "dry run",
+        "result_failed": "failed",
+        "result_uncertain": "uncertain",
+        "result_skipped": "skipped",
+        "btn_enable_live": "Activate live sending",
+        "btn_disable_live": "Disable live sending",
     },
     "es": {
         "app_title": "Auto Applyer",
         "app_subtitle": "Panel local de control de outreach",
-        "nav_dashboard": "Panel",
-        "nav_drafts": "Borradores",
-        "nav_generate": "Generar",
-        "nav_approve": "Aprobar",
-        "nav_dry_run": "Simulación",
-        "nav_live_send": "Envío real",
+        "nav_dashboard": "Inicio",
+        "nav_drafts": "Revisar borradores",
+        "nav_generate": "Preparar correos",
+        "nav_approve": "Aprobar correos",
+        "nav_dry_run": "Simular envío",
+        "nav_live_send": "Enviar correos",
         "nav_reports": "Informes",
         "nav_manual": "Acciones manuales",
         "nav_settings": "Ajustes",
@@ -199,8 +228,8 @@ TEXT: dict[str, dict[str, str]] = {
         "campaign_country": "País de campaña",
         "sender_email_label": "Email remitente",
         "secrets_never": "Los secretos nunca se muestran en esta interfaz.",
-        "live_enabled": "EL ENVÍO REAL ESTÁ ACTIVADO",
-        "live_disabled_safe": "El envío real está desactivado. Modo seguro.",
+        "live_enabled": "ATENCIÓN: el envío real está activado.",
+        "live_disabled_safe": "Modo seguro activado: no se pueden enviar correos reales.",
         "live_enabled_smtp": "EL ENVÍO REAL ESTÁ ACTIVADO — se enviarán correos por SMTP.",
         "live_on": "ENVÍO ACTIVO",
         "live_off": "ENVÍO OFF",
@@ -225,10 +254,10 @@ TEXT: dict[str, dict[str, str]] = {
         "rows": "filas",
         "quick_actions": "Acciones rápidas",
         "action_review": "Revisar borradores",
-        "action_generate": "Generar borradores",
-        "action_dry_run": "Ejecutar simulación",
-        "action_live": "Envío real",
-        "action_reports": "Informes",
+        "action_generate": "Preparar correos",
+        "action_dry_run": "Simular envío",
+        "action_live": "Enviar correos",
+        "action_reports": "Ver informes",
         "draft_review": "Revisión de borradores",
         "no_drafts": "No hay borradores en `{path}`. Ejecuta **Generar borradores** primero.",
         "loaded_rows": "Cargado: `{name}` ({count} filas)",
@@ -243,17 +272,30 @@ TEXT: dict[str, dict[str, str]] = {
         "email_body": "Cuerpo del email",
         "notes": "Notas",
         "score_notes": "Notas de puntuación",
-        "approve_selected": "Aprobar seleccionados",
+        "approve_selected": "Aprobar correos seleccionados",
         "unapprove_selected": "Desaprobar seleccionados",
-        "save_csv": "Guardar cambios CSV",
+        "save_csv": "Guardar cambios",
         "marked_yes": "Marcados {n} como approved=yes (sin guardar aún).",
         "marked_no": "Marcados {n} como approved=no (sin guardar aún).",
         "saved_csv": "Guardado en `{name}` con UTF-8 BOM.",
-        "generate_drafts": "Generar borradores",
+        "generate_drafts": "Preparar correos",
         "country": "País",
         "source_file": "Archivo origen",
+        "step_1_select_csv": "Paso 1 - Seleccionar CSV",
+        "step_2_import": "Paso 2 - Importar contactos",
+        "step_3_generate": "Paso 3 - Generar borradores",
+        "btn_import_csv": "Importar CSV",
+        "importing": "Importando contactos de Apollo...",
+        "import_done": "Importación finalizada.",
+        "import_contacts_result": "Contactos importados/actualizados: {n}",
+        "generate_failed": "El comando de generación falló (exit code {code}).",
+        "import_failed": "El comando de importación falló (exit code {code}).",
+        "generate_no_drafts_warning": "No se han generado borradores. Puede que primero tengas que importar el CSV o bajar el min_score.",
+        "generate_no_drafts_actions": "Acciones sugeridas:\n- Importar primero el CSV\n- Revisar que Company Country / country sea Spain\n- Bajar min_score\n- Revisar clasificación de emails\n- Revisar que haya emails válidos",
+        "drafts_generated_count": "Se han generado {n} borradores.",
+        "drafts_export_path": "Archivo de borradores: `{path}`",
         "force_regen": "Forzar regeneración (--force)",
-        "btn_generate": "Generar borradores",
+        "btn_generate": "Preparar correos",
         "generating": "Generando borradores...",
         "drafts_generated": "Borradores generados.",
         "approve_db_title": "Aprobar borradores en base de datos",
@@ -262,20 +304,20 @@ TEXT: dict[str, dict[str, str]] = {
         "running_approve": "Ejecutando approve-drafts...",
         "dry_run_title": "Simulación (dry-run)",
         "limit": "Límite",
-        "btn_dry_run": "Ejecutar simulación",
+        "btn_dry_run": "Simular envío",
         "running_dry_run": "Ejecutando simulación (solo lectura)...",
         "latest_dry_report": "Último informe de simulación",
         "cv_found_count": "CV encontrado: {ok}/{total}",
         "live_send_title": "Envío real",
         "confirm_send_live": 'Escribe exactamente "SEND LIVE" para desbloquear el envío',
-        "btn_send_live": "Enviar correos en vivo",
+        "btn_send_live": "Enviar correos aprobados",
         "sending": "Enviando correos en vivo...",
         "go_settings_enable": "Ir a Ajustes para activar envío real",
         "reports_title": "Informes",
         "no_live_report": "No hay informe de envío real todavía.",
         "no_dry_report": "No hay informe de simulación todavía.",
-        "report_live_title": "send_report.csv (real)",
-        "report_dry_title": "send_report_dry_run.csv",
+        "report_live_title": "Informe de envío real",
+        "report_dry_title": "Informe de simulación",
         "manual_title": "Acciones manuales",
         "mark_sent_help": "Marcar mensaje como enviado tras verificar Gmail Sent (para uncertain 4xx).",
         "message_id": "message_id",
@@ -302,12 +344,28 @@ TEXT: dict[str, dict[str, str]] = {
         "auto_send_help_on": "ON - envío real activado.",
         "enable_live_warning": "Activar envío real es peligroso.",
         "enable_live_placeholder": "Escribe ENABLE LIVE",
-        "btn_save_settings": "Guardar ajustes",
+        "btn_save_settings": "Guardar cambios",
         "settings_saved": "Ajustes guardados. Copia: `.env.backup`",
         "settings_save_failed": "No se pudieron guardar los ajustes: {reason}",
         "safe_mode_on": "Modo seguro activado. AUTO_SEND_ENABLED=false.",
         "env_missing": "No existe `.env`. Ejecuta `python -m src.cli init-env` primero.",
         "invalid_enable_phrase": 'Escribe exactamente "ENABLE LIVE" para activar envío real.',
+        "page_intro_inicio": "Desde aquí puedes preparar correos, revisarlos, aprobarlos, simular el envío y enviarlos de forma controlada.",
+        "page_intro_generate": "Importa el CSV de Apollo y genera borradores personalizados sin enviar nada.",
+        "page_intro_drafts": "Lee los correos generados y marca como aprobados solo los que quieras enviar.",
+        "page_intro_approve": "Guarda en la base de datos los correos que has marcado como aprobados en el CSV.",
+        "page_intro_dry_run": "Comprueba qué correos se enviarían y si el CV está adjunto, sin enviar nada real.",
+        "page_intro_live_send": "Envía solo los correos aprobados. Esta acción está bloqueada salvo que actives el envío real y confirmes manualmente.",
+        "page_intro_reports": "Revisa los resultados de simulaciones y envíos reales.",
+        "page_intro_manual": "Usa acciones manuales para casos excepcionales.",
+        "page_intro_settings": "Configura remitente, CV, límites, pausas entre correos y modo seguro.",
+        "result_sent": "enviado",
+        "result_dry_run": "simulación",
+        "result_failed": "fallido",
+        "result_uncertain": "incierto",
+        "result_skipped": "omitido",
+        "btn_enable_live": "Activar envío real",
+        "btn_disable_live": "Desactivar envío real",
     },
 }
 
@@ -316,7 +374,7 @@ def init_session() -> None:
     if "page" not in st.session_state:
         st.session_state.page = "dashboard"
     if "language" not in st.session_state:
-        st.session_state.language = "en"
+        st.session_state.language = "es"
     if "campaign_country" not in st.session_state:
         st.session_state.campaign_country = "uk"
 
@@ -426,6 +484,68 @@ def run_cli_command(args: list[str], stdin_text: str | None = None) -> dict[str,
     }
 
 
+def combined_output(result: dict[str, Any]) -> str:
+    return f"{result.get('stdout', '')}\n{result.get('stderr', '')}\n{result.get('output', '')}".strip()
+
+
+def parse_generate_draft_counts(output: str) -> tuple[int, int]:
+    created = 0
+    exported = 0
+    for pattern in (r"created\s+(\d+)\s+new\s+draft", r"exported\s+(\d+)\s+draft"):
+        for match in re.finditer(pattern, output, flags=re.IGNORECASE):
+            value = int(match.group(1))
+            if "created" in pattern:
+                created = max(created, value)
+            else:
+                exported = max(exported, value)
+    return created, exported
+
+
+def is_generate_noop(output: str) -> bool:
+    output_l = output.lower()
+    no_op_tokens = (
+        "no eligible contacts",
+        "created 0 new draft",
+        "exported 0 draft",
+        "run import-apollo first",
+    )
+    return any(token in output_l for token in no_op_tokens)
+
+
+def parse_generate_export_path(output: str) -> str:
+    match = re.search(r"exported\s+\d+\s+draft\(s\)\s+to\s+([^\r\n]+)", output, flags=re.IGNORECASE)
+    if not match:
+        return ""
+    return match.group(1).strip()
+
+
+def evaluate_generate_result(result: dict[str, Any]) -> dict[str, Any]:
+    output = combined_output(result)
+    created, exported = parse_generate_draft_counts(output)
+    success = result["returncode"] == 0 and (created > 0 or exported > 0)
+    noop = result["returncode"] == 0 and not success and is_generate_noop(output)
+    return {
+        "success": success,
+        "noop": noop,
+        "created": created,
+        "exported": exported,
+        "export_path": parse_generate_export_path(output),
+        "output": output,
+    }
+
+
+def parse_import_contact_counts(output: str) -> tuple[int, int]:
+    inserted = 0
+    updated = 0
+    m_inserted = re.search(r"contacts inserted:\s*(\d+)", output, flags=re.IGNORECASE)
+    m_updated = re.search(r"contacts updated:\s*(\d+)", output, flags=re.IGNORECASE)
+    if m_inserted:
+        inserted = int(m_inserted.group(1))
+    if m_updated:
+        updated = int(m_updated.group(1))
+    return inserted, updated
+
+
 def load_csv_safe(path: Path | str) -> pd.DataFrame | None:
     p = Path(path)
     if not p.is_absolute():
@@ -439,6 +559,14 @@ def load_csv_safe(path: Path | str) -> pd.DataFrame | None:
             return pd.read_csv(p)
         except Exception:
             return None
+
+
+def list_lead_csv_files() -> list[str]:
+    leads_dir = get_project_root() / "data" / "leads"
+    if not leads_dir.exists():
+        return []
+    files = sorted(leads_dir.glob("*.csv"), key=lambda p: p.name.lower())
+    return [str(p.relative_to(get_project_root())).replace("\\", "/") for p in files]
 
 
 def drafts_csv_path(country: str = "uk") -> Path:
@@ -600,8 +728,9 @@ def render_terminal_output(result: dict[str, Any]) -> None:
     st.markdown(f"**{t('command')}:** `{result['cmd']}`")
     box = result.get("output") or t("no_output")
     rc = result.get("returncode", 0)
+    content = f"{t('exit_code')}: {rc}\n\n{box}"
     st.markdown(
-        f'<div class="terminal-box">{html_mod.escape(f"{t("exit_code")}: {rc}\\n\\n{box}")}</div>',
+        f'<div class="terminal-box">{html_mod.escape(content)}</div>',
         unsafe_allow_html=True,
     )
 
@@ -617,16 +746,29 @@ def highlight_result(val: str) -> str:
     return colors.get(str(val).lower(), "")
 
 
+def translate_result_value(value: str) -> str:
+    mapping = {
+        "sent": t("result_sent"),
+        "dry_run": t("result_dry_run"),
+        "failed": t("result_failed"),
+        "uncertain": t("result_uncertain"),
+        "skipped": t("result_skipped"),
+    }
+    return mapping.get(str(value).lower(), str(value))
+
+
 def show_report_table(df: pd.DataFrame, title: str) -> None:
     st.subheader(title)
     if df is None or df.empty:
         st.warning(t("no_report_data"))
         return
-    if "result" in df.columns:
-        styled = df.style.map(highlight_result, subset=["result"])
+    display_df = df.copy()
+    if "result" in display_df.columns:
+        display_df["result"] = display_df["result"].map(translate_result_value)
+        styled = display_df.style.map(highlight_result, subset=["result"])
         st.dataframe(styled, use_container_width=True, hide_index=True)
     else:
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(display_df, use_container_width=True, hide_index=True)
     if "result" in df.columns:
         if (df["result"] == "uncertain").any():
             st.warning(t("uncertain_warning"))
@@ -687,7 +829,7 @@ def render_sidebar(env: dict[str, str | bool]) -> str:
 
 
 def render_dashboard(env: dict[str, str | bool], repo: Repository | None) -> None:
-    render_page_header("nav_dashboard")
+    render_page_header("nav_dashboard", "page_intro_inicio")
     cv_path = get_project_root() / str(env["cv_path"]) if env["cv_path"] else settings.cv_file
     cv_exists = cv_path.exists()
     stats = repo.stats() if repo else {}
@@ -761,7 +903,7 @@ def render_dashboard(env: dict[str, str | bool], repo: Repository | None) -> Non
 
 
 def render_drafts(country: str = "uk") -> None:
-    render_page_header("draft_review")
+    render_page_header("nav_drafts", "page_intro_drafts")
     path = drafts_csv_path(country)
     if "drafts_df" not in st.session_state or st.session_state.get("drafts_path") != str(path):
         st.session_state.drafts_df = load_csv_safe(path)
@@ -831,11 +973,55 @@ def render_drafts(country: str = "uk") -> None:
 
 
 def render_generate() -> None:
-    render_page_header("generate_drafts")
-    country = st.selectbox(t("country"), ["uk", "spain"], index=0, key="gen_country")
-    source_file = st.text_input(t("source_file"), value="data/leads/apollo-contacts-export.csv", key="gen_source")
+    render_page_header("nav_generate", "page_intro_generate")
+    default_idx = 1 if st.session_state.get("campaign_country") == "spain" else 0
+    country = st.selectbox(t("country"), ["uk", "spain"], index=default_idx, key="gen_country")
+    st.session_state.campaign_country = country
+
+    st.markdown(f"### {t('step_1_select_csv')}")
+    csv_options = list_lead_csv_files()
+    preferred_spain = "data/leads/apollo-contacts-export-spain.csv"
+    preferred_spain_alt = "data/leads/apollo-contacts-export-esp.csv"
+    preferred_uk = "data/leads/apollo-contacts-export.csv"
+    if csv_options:
+        if country == "spain" and preferred_spain in csv_options:
+            source_default = preferred_spain
+        elif country == "spain" and preferred_spain_alt in csv_options:
+            source_default = preferred_spain_alt
+        elif country == "uk" and preferred_uk in csv_options:
+            source_default = preferred_uk
+        else:
+            source_default = csv_options[0]
+        source_file = st.selectbox(
+            t("source_file"),
+            options=csv_options,
+            index=csv_options.index(source_default),
+            key="gen_source_select",
+        )
+    else:
+        source_file = st.text_input(
+            t("source_file"),
+            value=preferred_spain if country == "spain" else preferred_uk,
+            key="gen_source_fallback",
+        )
+
+    st.markdown(f"### {t('step_2_import')}")
+    if st.button(t("btn_import_csv"), key="btn_import_csv", type="secondary"):
+        import_args = ["import-apollo", "--file", source_file, "--country", country]
+        with st.spinner(t("importing")):
+            import_result = run_cli_command(import_args)
+        render_terminal_output(import_result)
+        output = combined_output(import_result)
+        inserted, updated = parse_import_contact_counts(output)
+        if import_result["returncode"] == 0:
+            st.info(t("import_done"))
+            st.info(t("import_contacts_result", n=inserted + updated))
+        else:
+            st.error(t("import_failed", code=import_result["returncode"]))
+
+    st.markdown(f"### {t('step_3_generate')}")
     min_score = st.number_input(t("min_score"), min_value=0, max_value=100, value=50, key="gen_min_score")
-    force = st.checkbox(t("force_regen"), value=False, key="gen_force")
+    force = st.checkbox(t("force_regen"), value=True, key="gen_force")
     if st.button(t("btn_generate"), type="primary"):
         args = [
             "generate-drafts",
@@ -854,13 +1040,24 @@ def render_generate() -> None:
         with st.spinner(t("generating")):
             result = run_cli_command(args)
         render_terminal_output(result)
-        if result["returncode"] == 0:
+        evaluation = evaluate_generate_result(result)
+        generated_count = max(evaluation["created"], evaluation["exported"])
+        if evaluation["success"]:
             st.session_state.pop("drafts_df", None)
-            st.success(t("drafts_generated"))
+            st.success(t("drafts_generated_count", n=generated_count))
+            if evaluation["export_path"]:
+                st.caption(t("drafts_export_path", path=evaluation["export_path"]))
+        elif evaluation["noop"]:
+            st.warning(t("generate_no_drafts_warning"))
+            st.info(t("generate_no_drafts_actions"))
+        elif result["returncode"] == 0:
+            st.warning(t("generate_no_drafts_warning"))
+        else:
+            st.error(t("generate_failed", code=result["returncode"]))
 
 
 def render_approve(country: str = "uk") -> None:
-    render_page_header("approve_db_title")
+    render_page_header("nav_approve", "page_intro_approve")
     csv_path = f"data/output/outreach_drafts_{country}.csv"
     st.caption(t("approve_import_hint", path=csv_path))
     if st.button(t("btn_approve_db"), type="primary"):
@@ -870,7 +1067,7 @@ def render_approve(country: str = "uk") -> None:
 
 
 def render_dry_run(country: str = "uk") -> None:
-    render_page_header("dry_run_title")
+    render_page_header("nav_dry_run", "page_intro_dry_run")
     limit = st.number_input(t("limit"), min_value=1, max_value=50, value=5, key="dry_limit")
     if st.button(t("btn_dry_run"), type="primary"):
         with st.spinner(t("running_dry_run")):
@@ -886,7 +1083,7 @@ def render_dry_run(country: str = "uk") -> None:
 
 def render_live_send(country: str = "uk", env: dict[str, str | bool] | None = None) -> None:
     env = env or load_env_safe()
-    render_page_header("live_send_title")
+    render_page_header("nav_live_send", "page_intro_live_send")
     if not env["auto_send_enabled"]:
         st.markdown(f'<div class="safe-card">{html_mod.escape(t("live_disabled_safe"))}</div>', unsafe_allow_html=True)
         st.button(t("btn_send_live"), disabled=True)
@@ -910,7 +1107,7 @@ def render_live_send(country: str = "uk", env: dict[str, str | bool] | None = No
 
 
 def render_reports() -> None:
-    render_page_header("reports_title")
+    render_page_header("nav_reports", "page_intro_reports")
     out = get_project_root() / "data" / "output"
     live = load_csv_safe(out / "send_report.csv")
     dry = load_csv_safe(out / "send_report_dry_run.csv")
@@ -925,7 +1122,7 @@ def render_reports() -> None:
 
 
 def render_manual_actions() -> None:
-    render_page_header("manual_title")
+    render_page_header("nav_manual", "page_intro_manual")
     st.markdown(t("mark_sent_help"))
     message_id = st.number_input(t("message_id"), min_value=1, step=1, value=1, key="mark_sent_id")
     if st.button(t("btn_mark_sent")):
@@ -937,7 +1134,7 @@ def render_manual_actions() -> None:
 
 
 def render_settings() -> None:
-    render_page_header("settings_title", "settings_subtitle")
+    render_page_header("settings_title", "page_intro_settings")
     if not env_file_path().exists():
         st.error(t("env_missing"))
         return
@@ -974,6 +1171,9 @@ def render_settings() -> None:
     if auto_send_ui and not current_auto:
         st.markdown(f'<div class="danger-card">{html_mod.escape(t("enable_live_warning"))}</div>', unsafe_allow_html=True)
         enable_confirm = st.text_input(t("enable_live_placeholder"))
+        st.caption(t("btn_enable_live"))
+    if current_auto and not auto_send_ui:
+        st.caption(t("btn_disable_live"))
     if st.button(t("btn_save_settings"), type="primary"):
         if auto_send_ui and not current_auto and enable_confirm.strip() != ENABLE_LIVE_PHRASE:
             st.error(t("invalid_enable_phrase"))

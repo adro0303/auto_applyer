@@ -1,10 +1,13 @@
 import random
 import smtplib
 import time
+import os
 from email.message import EmailMessage
 from pathlib import Path
 
-from src.config import settings
+from dotenv import load_dotenv
+
+from src.config import PROJECT_ROOT, settings
 from src.db.repository import Repository
 from src.smtp_errors import UNCERTAIN_CONSOLE_MESSAGE, classify_smtp_exception
 from src.validate_contacts import is_valid_email
@@ -33,8 +36,14 @@ def _smtp_configured() -> bool:
     return bool(settings.smtp_user and settings.smtp_app_password and settings.sender_email)
 
 
+def _auto_send_enabled_runtime() -> bool:
+    load_dotenv(PROJECT_ROOT / ".env", override=True)
+    raw = os.getenv("AUTO_SEND_ENABLED", "false")
+    return str(raw).strip().lower() in {"1", "true", "yes", "on"}
+
+
 def check_send_allowed(repo: Repository, count: int = 1) -> None:
-    if not settings.auto_send_enabled:
+    if not _auto_send_enabled_runtime():
         raise SendSafetyError(
             "AUTO_SEND_ENABLED is false. Set AUTO_SEND_ENABLED=true in .env only after manual review."
         )

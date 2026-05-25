@@ -5,11 +5,11 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-load_dotenv(PROJECT_ROOT / ".env")
+load_dotenv(PROJECT_ROOT / ".env", override=True)
 
 
 def _bool(name: str, default: bool = False) -> bool:
-    return os.getenv(name, str(default)).lower() in {"1", "true", "yes", "on"}
+    return os.getenv(name, str(default)).strip().lower() in {"1", "true", "yes", "on"}
 
 
 def resolve_path(relative_or_absolute: str | Path) -> Path:

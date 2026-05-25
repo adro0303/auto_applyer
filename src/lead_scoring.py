@@ -12,6 +12,9 @@ AGENCY_NAME_HINTS = (
     "consultancy",
     "consulting agency",
     "headhunt",
+    "selección",
+    "consultoría de selección",
+    "talent agency",
 )
 
 AGENCY_INDUSTRY_HINTS = ("staffing", "recruiting", "recruitment", "executive search")
@@ -26,6 +29,10 @@ TECH_ROLES = (
     "it manager",
     "head of it",
     "technology manager",
+    "cio",
+    "head of technology",
+    "director de tecnología",
+    "responsable it",
 )
 
 OPS_ROLES = (
@@ -44,9 +51,27 @@ RECRUITER_ROLES = (
     "human resources",
     "tech recruiter",
     "technical recruiter",
+    "people",
+    "recursos humanos",
+    "rrhh",
+    "selección",
+    "técnico de selección",
+    "responsable de personas",
 )
 
-FOUNDER_ROLES = ("founder", "co-founder", "cofounder", "ceo")
+FOUNDER_ROLES = (
+    "founder",
+    "co-founder",
+    "cofounder",
+    "ceo",
+    "fundador",
+    "cofundador",
+    "owner",
+    "director general",
+    "managing director",
+    "socio fundador",
+    "founder & ceo",
+)
 
 
 def _contains(text: str, keywords: tuple[str, ...]) -> bool:
@@ -82,6 +107,19 @@ def detect_contact_type(record: dict[str, Any]) -> str:
     if is_agency_company(record):
         return "agency_recruiter"
 
+    if _contains(
+        role,
+        (
+            "recruitment",
+            "staffing",
+            "talent agency",
+            "headhunter",
+            "consultoría de selección",
+            "recruiter externo",
+        ),
+    ):
+        return "agency_recruiter"
+
     if _contains(role, ("technical recruiter", "tech recruiter")):
         return "agency_recruiter" if is_agency_company(record) else "direct_recruiter"
 
@@ -89,6 +127,9 @@ def detect_contact_type(record: dict[str, Any]) -> str:
         return "direct_recruiter"
 
     if _contains(role, TECH_ROLES):
+        return "tech_lead"
+
+    if _contains(role, ("cto", "cio", "head of technology", "it manager", "director de tecnología")):
         return "technical_decision_maker"
 
     if _contains(role, OPS_ROLES):
@@ -96,7 +137,7 @@ def detect_contact_type(record: dict[str, Any]) -> str:
 
     if _contains(role, FOUNDER_ROLES):
         if employees is None or int(employees) <= 200:
-            return "founder"
+            return "founder_or_executive"
         return "general"
 
     if _contains(role, ("student", "intern")):

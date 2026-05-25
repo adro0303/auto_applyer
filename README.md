@@ -8,6 +8,46 @@ Auto Applyer is a local Python tool for safe job outreach automation. It helps i
 
 Designed for careful, human-reviewed, low-volume outreach for junior/graduate roles — not spam.
 
+## How to use
+
+### Recommended option: visual dashboard
+
+The easiest way to use the tool is through the local dashboard:
+
+```bash
+run_app.bat
+```
+
+or:
+
+```bash
+python -m streamlit run src/ui_app.py
+```
+
+From the dashboard you can:
+
+1. Review configuration and safety status.
+2. Generate drafts from your Apollo CSV.
+3. Review generated emails.
+4. Approve only the drafts you want to send.
+5. Run a dry-run before sending.
+6. Enable or disable live sending from settings.
+7. Send approved emails with manual confirmation.
+8. Review delivery reports.
+
+Live sending is protected: it requires `AUTO_SEND_ENABLED=true` and typing `SEND LIVE`.
+
+### Recommended workflow
+
+1. Place the Apollo CSV in `data/leads/`.
+2. Generate drafts from dashboard or CLI.
+3. Review emails manually.
+4. Approve only high-quality contacts.
+5. Run dry-run.
+6. If everything looks correct, enable live sending.
+7. Send in small batches.
+8. Disable live sending again after finishing.
+
 ## Features
 
 - Apollo CSV import
@@ -41,7 +81,7 @@ Copy `.env.example` to `.env` and fill local values only.
 
 ## Environment variables
 
-Use `.env.example` placeholders. Important variables:
+Main variables:
 
 - SMTP: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_APP_PASSWORD`
 - Sender: `SENDER_EMAIL`, `SENDER_NAME`
@@ -78,7 +118,21 @@ or
 run_app.bat
 ```
 
-The dashboard is local-first, includes safety controls, and requires both `AUTO_SEND_ENABLED=true` and `SEND LIVE` for live send.
+The dashboard runs locally and lets you manage the full workflow without typing commands constantly.
+
+## Desktop shortcut with custom icon
+
+If you want to launch the app from desktop with a custom icon:
+
+1. Right-click `run_app.bat`.
+2. Select **Create shortcut**.
+3. Move the shortcut to your desktop.
+4. Right-click the shortcut and open **Properties**.
+5. Click **Change Icon**.
+6. Choose the `.ico` file located in the project root.
+7. Save changes.
+
+Important: the `.bat` file itself cannot hold a custom icon directly; the icon is applied to the shortcut.
 
 ## Project structure
 
@@ -100,7 +154,8 @@ auto_applyer/
 - Do not commit SQLite files, real CSVs, reports, or CVs
 - Do not expose SMTP credentials or API keys
 - Keep sending volume low and reviewed by a human
+- Always run dry-run before live sending
 
 ## Disclaimer
 
-This project is intended for careful, ethical job-search outreach. You are responsible for legal compliance, consent, and platform/email policy adherence.
+This project is intended for personal, careful, manually reviewed job outreach. Do not use it for spam, abusive scraping, or unsolicited bulk sending.

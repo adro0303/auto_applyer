@@ -80,6 +80,11 @@ def build_parser() -> argparse.ArgumentParser:
     p_send.add_argument("--dry-run", action="store_true", help="Preview without sending or DB updates")
     p_send.add_argument("--live", action="store_true", help="Live send via SMTP (requires AUTO_SEND_ENABLED=true)")
     p_send.add_argument("--limit", type=int, default=None)
+    p_send.add_argument(
+        "--debug-env",
+        action="store_true",
+        help="Print non-sensitive environment diagnostics for send-approved safety checks",
+    )
 
     p_fu = sub.add_parser("export-followups", help="Export follow-up drafts (CSV only, not sent)")
     p_fu.add_argument("--country", required=True, help="uk or spain")
@@ -137,7 +142,7 @@ def main(argv: list[str] | None = None) -> None:
         if args.live and args.dry_run:
             raise SystemExit("Use either --live or --dry-run, not both.")
         dry_run = not args.live
-        cmd_send_approved(args.country, dry_run=dry_run, limit=args.limit)
+        cmd_send_approved(args.country, dry_run=dry_run, limit=args.limit, debug_env=args.debug_env)
     elif args.command == "export-followups":
         cmd_export_followups(args.country, args.days, force=args.force)
     elif args.command == "mark-sent":

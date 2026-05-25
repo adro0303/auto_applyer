@@ -1,4 +1,6 @@
 import pandas as pd
+import os
+from dotenv import load_dotenv
 
 from src.cleanup_test_data import run_cleanup
 from src.draft_audit import audit_draft_rows
@@ -14,6 +16,14 @@ from src.init_env import cmd_init_env
 from src.scoring import score_all_contacts
 from src.sending import SendSafetyError, process_approved_batch
 from src.validate_contacts import validate_contact_row
+
+def _runtime_auto_send_enabled() -> tuple[bool, str | None, str | None]:
+    env_path = settings.path(".env")
+    found = load_dotenv(env_path, override=True)
+    raw = os.getenv("AUTO_SEND_ENABLED")
+    enabled = str(raw).strip().lower() in {"1", "true", "yes", "on"}
+    return enabled, str(env_path) if found else None, raw
+
 
 def _validate_unvalidated(repo: Repository) -> None:
     for contact in repo.fetch_all_contacts():
@@ -80,6 +90,7 @@ def _export_drafts_csv(
                 "source_file": msg.get("source_file"),
                 "company": msg["company_name"],
                 "name": msg["name"],
+                "first_name": msg.get("name", "").split()[0] if msg.get("name") else "",
                 "role": msg.get("role"),
                 "email": msg["email"],
                 "country": country,
@@ -353,7 +364,12 @@ def cmd_approve_drafts(
     raise SystemExit("Provide --csv, --message-id, or --email")
 
 
-def cmd_send_approved(country: str, dry_run: bool = True, limit: int | None = None) -> None:
+def cmd_send_approved(
+    country: str,
+    dry_run: bool = True,
+    limit: int | None = None,
+    debug_env: bool = False,
+) -> None:
     repo = _repo()
     country = normalize_country(country)
     if not country:
@@ -366,8 +382,20 @@ def cmd_send_approved(country: str, dry_run: bool = True, limit: int | None = No
         print(f"No approved messages for {country}. Approve drafts first.")
         return
 
+    runtime_enabled, env_path, env_raw = _runtime_auto_send_enabled()
+    if debug_env:
+        print("[debug-env] send-approved configuration")
+        print(f"[debug-env] cwd={os.getcwd()}")
+        print(f"[debug-env] env_path_loaded={env_path or 'not_found'}")
+        print(f"[debug-env] AUTO_SEND_ENABLED raw={env_raw!r}")
+        print(f"[debug-env] bool_runtime_enabled={runtime_enabled}")
+        print(f"[debug-env] bool_settings_auto_send_enabled={settings.auto_send_enabled}")
+        print(f"[debug-env] dry_run={dry_run}")
+        print(f"[debug-env] limit={limit}")
+        print(f"[debug-env] country={country}")
+
     if not dry_run:
-        if not settings.auto_send_enabled:
+        if not runtime_enabled:
             raise SendSafetyError("AUTO_SEND_ENABLED is false. Set to true in .env for live sending.")
         answer = input(f"About to send {len(messages)} email(s). Continue? y/N: ").strip().lower()
         if answer != "y":
